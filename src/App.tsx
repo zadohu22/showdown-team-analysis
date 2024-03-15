@@ -1,12 +1,15 @@
-import { TestComponent } from './components/test-component.tsx'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Home from './components/Home';
+import { Login, Signup } from './components/Auth';
 
-const App = () => {
-  return (
-    <div className="bg-gray-600 w-full h-full flex justify-center items-center">
-      <TestComponent hello="hello vite/typescript." />
-      
-    </div>
-  );
-};
-
-export default App
+export default function App() {
+	return (
+		<Router>
+			<Routes>
+				<Route path='/' element={<Home />} />
+				<Route path='/login' element={<Login />} />
+				<Route path='/signup' element={<Signup />} />
+			</Routes>
+		</Router>
+	);
+}
