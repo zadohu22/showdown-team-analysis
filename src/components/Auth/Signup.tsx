@@ -8,6 +8,7 @@ const Signup = () => {
 	const [confirmPassword, setConfirmPassword] = useState<string>('');
 
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+		console.log('test');
 		e.preventDefault();
 		console.log('submitted');
 		try {
@@ -27,6 +28,18 @@ const Signup = () => {
 			console.log(data);
 		} catch (error) {
 			console.error('Error:', error);
+		}
+	};
+
+	const handleShowAll = async () => {
+		console.log('hi');
+		try {
+			const response = await fetch('http://localhost:3000/get-all');
+
+			const data = await response.json();
+			console.log(data);
+		} catch (error) {
+			console.log(error);
 		}
 	};
 
@@ -68,6 +81,7 @@ const Signup = () => {
 					Login
 				</p>
 			</div>
+			<button onClick={handleShowAll}>Show all users</button>
 		</div>
 	);
 };
