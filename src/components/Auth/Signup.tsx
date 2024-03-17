@@ -8,11 +8,9 @@ const Signup = () => {
 	const [confirmPassword, setConfirmPassword] = useState<string>('');
 
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-		console.log('test');
 		e.preventDefault();
-		console.log('submitted');
 		try {
-			const response = await fetch('http://localhost:3000/create-from-client', {
+			const response = await fetch('http://localhost:3000/create-user', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -21,7 +19,6 @@ const Signup = () => {
 				body: JSON.stringify({
 					email,
 					password,
-					confirmPassword,
 				}),
 			});
 			const data = await response.json();
@@ -32,9 +29,8 @@ const Signup = () => {
 	};
 
 	const handleShowAll = async () => {
-		console.log('hi');
 		try {
-			const response = await fetch('http://localhost:3000/get-all');
+			const response = await fetch('http://localhost:3000/get-all-users');
 
 			const data = await response.json();
 			console.log(data);
