@@ -9,6 +9,7 @@ const Signup = () => {
 
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
+		// -- TODO -- handle password !== confirmPassword
 		try {
 			const response = await fetch('http://localhost:3000/create-user', {
 				method: 'POST',
@@ -19,6 +20,7 @@ const Signup = () => {
 				body: JSON.stringify({
 					email,
 					password,
+					confirmPassword,
 				}),
 			});
 			const data = await response.json();
@@ -30,12 +32,11 @@ const Signup = () => {
 
 	const handleShowAll = async () => {
 		try {
-			const response = await fetch('http://localhost:3000/get-all-users');
-
+			const response = await fetch('http://localhost:3000/show-all-users');
 			const data = await response.json();
 			console.log(data);
 		} catch (error) {
-			console.log(error);
+			console.log('Error fetching users:', error);
 		}
 	};
 
