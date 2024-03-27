@@ -3,97 +3,44 @@ interface Pokemon {
 	Item: string;
 	Ability: string;
 	Level: string;
-	Shiny: string;
+	Shiny: boolean | string; // Updated Shiny type to boolean | string
 	TeraType: string;
-	EVs: string;
-	IVs: string;
+	EVs: boolean | string; // Updated EVs type to boolean | string
+	IVs: boolean | string; // Updated IVs type to boolean | string
 	Moves: string[];
 	Nature: string;
 }
 
-export const parsePokemonString = (input: string): Pokemon => {
-	const lines = input.trim().split(/\n/);
+export const convertToJson = (input: string): Pokemon => {
+	// Regular expression to match different parts of the input
+	const regex =
+		/([^@]+) @ ([^\n]+)\nAbility: ([^\n]+)\nLevel: ([^\n]+)\nTera Type: ([^\n]+)\nEVs: ([^\n]+)\n(IVs: ([^\n]+)\n)?- Moves\n((?:- [^\n]+\n)*)Nature: ([^\n]+)/;
+
+	// Extract information using regular expression
+	const match = input.match(regex);
+	if (!match) {
+		throw new Error('Invalid input format');
+	}
+
+	// Extract moves
+	const moves = match[9]
+		.trim()
+		.split('\n')
+		.map((move) => move.substring(2).trim());
+
+	// Create Pokemon object with extracted information
 	const pokemon: Pokemon = {
-		Name: '',
-		Item: '',
-		Ability: '',
-		Level: '',
-		Shiny: '',
-		TeraType: '',
-		EVs: '',
-		IVs: '',
-		Moves: [],
-		Nature: '',
+		Name: match[1].trim(),
+		Item: match[2].trim(),
+		Ability: match[3].trim(),
+		Level: match[4].trim(),
+		TeraType: match[5].trim(),
+		EVs: match[6].trim(),
+		IVs: match[8]?.trim() || false,
+		Moves: moves,
+		Nature: match[10].trim(),
+		Shiny: false, // Assuming Shiny is not included in the input string
 	};
-
-	// Process the first line separately to extract Name and Item
-	const [name, item] = lines[0].split('@');
-	pokemon.Name = name.trim();
-	pokemon.Item = item?.trim() || '';
-
-	// Extract Nature from the 7th line
-	const natureLine = lines[6].trim();
-	const natureWords = natureLine.split(' ');
-	if (natureWords.length > 1 && natureWords[1].toLowerCase() === 'nature') {
-		pokemon.Nature = natureWords[0];
-	}
-
-	// Process the rest of the lines
-	for (let i = 1; i < lines.length; i++) {
-		const line = lines[i];
-		const trimmedLine = line.trim();
-
-		// Check if the line starts with '-' to identify moves
-		if (trimmedLine.startsWith('-')) {
-			// Remove the '-' and trim the line to get the move name
-			const moveName = trimmedLine.substring(1).trim();
-			pokemon.Moves.push(moveName);
-		} else {
-			const [key, ...values] = line.split(':');
-			const trimmedKey = key.trim();
-			const trimmedValue = values.join(':').trim();
-
-			switch (trimmedKey) {
-				case 'Ability':
-					pokemon.Ability = trimmedValue;
-					break;
-				case 'Level':
-					pokemon.Level = trimmedValue;
-					break;
-				case 'Shiny':
-					pokemon.Shiny = trimmedValue;
-					break;
-				case 'Tera Type':
-					pokemon.TeraType = trimmedValue;
-					break;
-				case 'EVs':
-					pokemon.EVs = trimmedValue;
-					break;
-				case 'IVs':
-					pokemon.IVs = trimmedValue;
-					break;
-				default:
-					break;
-			}
-		}
-	}
 
 	return pokemon;
 };
-
-const input = `\
-Vileplume @ Life Orb  
-Ability: Effect Spore  
-Level: 50  
-Shiny: Yes  
-Tera Type: Ground  
-EVs: 140 HP / 116 Def / 252 SpA  
-Modest Nature  
-IVs: 0 Atk  
-- Giga Drain  
-- Moonblast  
-- Sludge Bomb  
-- Tera Blast`;
-
-const pokemonData: Pokemon = parsePokemonString(input);
-console.log(pokemonData);

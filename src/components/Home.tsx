@@ -1,7 +1,8 @@
 import { convertToJson } from '../helpers/convertToJson';
+import { DisplayMons } from './DisplayMons';
 
 const Home = () => {
-	const text = `\
+	const vileplume = `\
 	Vileplume @ Life Orb  
 	Ability: Effect Spore  
 	Level: 50  
@@ -15,7 +16,7 @@ const Home = () => {
 	- Sludge Bomb  
 	- Tera Blast`;
 
-	const text2 = `Gyarados @ Clear Amulet  
+	const gyarados = `Gyarados @ Clear Amulet  
 	Ability: Intimidate  
 	Level: 50  
 	Tera Type: Steel  
@@ -26,24 +27,63 @@ const Home = () => {
 	- Iron Head  
 	- Roar  `;
 
-	const jsonData = convertToJson(text2);
-	console.log(jsonData);
+	const porygon = `Porygon2 @ Eviolite  
+	Ability: Download  
+	Level: 50  
+	Tera Type: Ghost  
+	EVs: 252 HP / 252 SpA  
+	Quiet Nature  
+	IVs: 0 Atk  
+	- Trick Room  
+	- Recover  
+	- Ice Beam  
+	- Tri Attack  `;
+
+	const tinkaton = `Tinkaton @ Assault Vest  
+	Ability: Own Tempo  
+	Level: 50  
+	Tera Type: Fighting  
+	EVs: 252 HP / 252 Atk / 4 SpD  
+	Adamant Nature  
+	- Fake Out  
+	- Gigaton Hammer  
+	- Play Rough  
+	- Tera Blast  `;
+
+	const umbreon = `Umbreon @ Leftovers  
+	Ability: Inner Focus  
+	Level: 50  
+	Tera Type: Poison  
+	EVs: 252 HP / 156 Def / 100 SpD  
+	Bold Nature  
+	IVs: 0 Atk  
+	- Snarl  
+	- Foul Play  
+	- Taunt  
+	- Moonlight `;
+
+	// const jsonData = convertToJson(text2);
+	// console.log(jsonData);
 	return (
-		<div className='w-full h-full text-black flex justify-center items-center'>
-			<div className='flex flex-col'>
-				{[
-					`Pokemon is ${jsonData.Name}, with the ${jsonData.Ability} ability.`,
-					`Level: ${jsonData.Level}.`,
-					`Shiny?: ${jsonData.Shiny}.`,
-					`Tera Type: ${jsonData.TeraType}.`,
-					`EVs: ${jsonData.EVs}.`,
-					`Nature: ${jsonData.Nature}.`,
-					`IVs: ${jsonData.IVs}.`,
-					`Moves: ${jsonData.Moves}.`,
-					`Item: ${jsonData.Item}.`,
-				].map((line, index) => (
-					<p key={index}>{line}</p>
-				))}
+		<div className='w-full h-full flex flex-col text-black justify-center items-center'>
+			<div>
+				<DisplayMons pokemon={vileplume} />
+			</div>
+			-----------------------------------------
+			<div>
+				<DisplayMons pokemon={gyarados} />
+			</div>
+			-----------------------------------------
+			<div>
+				<DisplayMons pokemon={umbreon} />
+			</div>
+			-----------------------------------------
+			<div>
+				<DisplayMons pokemon={porygon} />
+			</div>
+			-----------------------------------------
+			<div>
+				<DisplayMons pokemon={tinkaton} />
 			</div>
 		</div>
 	);

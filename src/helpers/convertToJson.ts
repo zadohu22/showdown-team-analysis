@@ -3,7 +3,7 @@ interface Pokemon {
 	Item: string;
 	Ability: string;
 	Level: string;
-	Shiny: boolean | string; // Updated Shiny type to boolean | string
+	Shiny: string; // Updated Shiny type to boolean | string
 	TeraType: string;
 	EVs: boolean | string; // Updated EVs type to boolean | string
 	IVs: boolean | string; // Updated IVs type to boolean | string
@@ -18,7 +18,7 @@ export const convertToJson = (input: string): Pokemon => {
 		Item: '',
 		Ability: '',
 		Level: '',
-		Shiny: false, // Default value set to false
+		Shiny: 'No', // Default value set to false
 		TeraType: '',
 		EVs: false, // Default value set to false
 		IVs: false, // Default value set to false
@@ -27,20 +27,33 @@ export const convertToJson = (input: string): Pokemon => {
 	};
 
 	// Process the first line separately to extract Name and Item
-	const [name, item] = lines[0].split('@');
-	pokemon.Name = name.trim();
-	pokemon.Item = item?.trim() || '';
+	// const [name, item] = lines[0].split('@');
+	// pokemon.Name = name.trim();
+	// pokemon.Item = item?.trim() || '';
+	// // add pokemon.Name and pokemon.Item to the lines, and remove the line that contains both
+	// lines.unshift(pokemon.Item);
+	// lines.unshift(pokemon.Name);
+	// lines.splice(2, 1); // remove the line that contains both Name and Item
 
-	// Extract Nature from the 7th line
-	const natureLine = lines[6].trim();
-	const natureWords = natureLine.split(' ');
-	if (natureWords.length > 1 && natureWords[1].toLowerCase() === 'nature') {
-		pokemon.Nature = natureWords[0];
+	// Extract name and item from the first line
+	const [name, item = ''] = lines[0].split('@').map((part) => part.trim()); // Trim each part
+
+	// Assign name and item to the Pokemon object
+	pokemon.Name = name;
+	pokemon.Item = item;
+
+	// Remove the line that contains both Name and Item
+	lines.shift(); // Remove the first line
+
+	// If item is not empty, add it back to the lines
+	if (item !== '') {
+		lines.unshift(item);
 	}
+	// Add name back to the lines
+	lines.unshift(name);
 
 	// Process the rest of the lines
-	for (let i = 1; i < lines.length; i++) {
-		const line = lines[i];
+	lines.forEach((line) => {
 		const trimmedLine = line.trim();
 
 		// Check if the line starts with '-' to identify moves
@@ -49,55 +62,40 @@ export const convertToJson = (input: string): Pokemon => {
 			const moveName = trimmedLine.substring(1).trim();
 			pokemon.Moves.push(moveName);
 		} else {
-			const [key, ...values] = line.split(':');
-			const trimmedKey = key.trim();
-			const trimmedValue = values.join(':').trim();
+			// const [key, ...values] = line.split(':');
+			const [key, ...values] = trimmedLine.split(':').map((str) => str.trim());
+			// const trimmedKey = key.trim();
+			const trimmedValue = values.join(':');
 
-			switch (trimmedKey) {
+			if (key.includes('Nature')) {
+				const extractNature = key.split(' ')[0];
+				pokemon.Nature = extractNature;
+			}
+
+			switch (key) {
 				case 'Ability':
 					pokemon.Ability = trimmedValue;
 					break;
 				case 'Level':
 					pokemon.Level = trimmedValue;
 					break;
-				case 'Shiny':
-					// If "Shiny" is present, set its value to true, otherwise set to false
-					pokemon.Shiny =
-						trimmedValue.toLowerCase() === 'yes' ? true : trimmedValue;
-					break;
 				case 'Tera Type':
 					pokemon.TeraType = trimmedValue;
 					break;
+				case 'Shiny':
+					pokemon.Shiny = trimmedValue || 'No';
+					break;
 				case 'EVs':
-					// If "EVs" are present, set their value, otherwise set to false
 					pokemon.EVs = trimmedValue || false;
 					break;
 				case 'IVs':
-					// If "IVs" are present, set their value, otherwise set to false
 					pokemon.IVs = trimmedValue || false;
 					break;
 				default:
 					break;
 			}
 		}
-	}
+	});
 
 	return pokemon;
 };
-
-const input = `\
-Vileplume @ Life Orb  
-Ability: Effect Spore  
-Level: 50  
-Shiny: Yes  
-Tera Type: Ground  
-EVs: 140 HP / 116 Def / 252 SpA  
-Modest Nature  
-IVs: 0 Atk  
-- Giga Drain  
-- Moonblast  
-- Sludge Bomb  
-- Tera Blast`;
-
-const pokemonData: Pokemon = convertToJson(input);
-console.log(pokemonData);
