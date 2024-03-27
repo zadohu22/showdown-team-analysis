@@ -3,47 +3,41 @@ interface Pokemon {
 	Item: string;
 	Ability: string;
 	Level: string;
-	Shiny: string; // Updated Shiny type to boolean | string
+	Shiny: string; 
 	TeraType: string;
-	EVs: boolean | string; // Updated EVs type to boolean | string
-	IVs: boolean | string; // Updated IVs type to boolean | string
+	EVs: boolean | string; 
+	IVs: boolean | string; 
 	Moves: string[];
 	Nature: string;
 }
 
 export const convertToJson = (input: string): Pokemon => {
+	// Split the input into lines and trim each line.
 	const lines = input.trim().split(/\n/);
+
+	// Create an empty Pokemon object to store the extracted data.
 	const pokemon: Pokemon = {
 		Name: '',
 		Item: '',
 		Ability: '',
 		Level: '',
-		Shiny: 'No', // Default value set to false
+		Shiny: 'No', 
 		TeraType: '',
-		EVs: false, // Default value set to false
-		IVs: false, // Default value set to false
+		EVs: false, 
+		IVs: false, 
 		Moves: [],
 		Nature: '',
 	};
 
-	// Process the first line separately to extract Name and Item
-	// const [name, item] = lines[0].split('@');
-	// pokemon.Name = name.trim();
-	// pokemon.Item = item?.trim() || '';
-	// // add pokemon.Name and pokemon.Item to the lines, and remove the line that contains both
-	// lines.unshift(pokemon.Item);
-	// lines.unshift(pokemon.Name);
-	// lines.splice(2, 1); // remove the line that contains both Name and Item
-
 	// Extract name and item from the first line
-	const [name, item = ''] = lines[0].split('@').map((part) => part.trim()); // Trim each part
+	const [name, item = ''] = lines[0].split('@').map((part) => part.trim());
 
 	// Assign name and item to the Pokemon object
 	pokemon.Name = name;
 	pokemon.Item = item;
 
 	// Remove the line that contains both Name and Item
-	lines.shift(); // Remove the first line
+	lines.shift();
 
 	// If item is not empty, add it back to the lines
 	if (item !== '') {
@@ -62,16 +56,16 @@ export const convertToJson = (input: string): Pokemon => {
 			const moveName = trimmedLine.substring(1).trim();
 			pokemon.Moves.push(moveName);
 		} else {
-			// const [key, ...values] = line.split(':');
+			// Extract key and value from the line and assign them to the Pokemon object.
 			const [key, ...values] = trimmedLine.split(':').map((str) => str.trim());
-			// const trimmedKey = key.trim();
 			const trimmedValue = values.join(':');
 
+			// Check if the key contains 'Nature' to assign the nature to the Pokemon object.
 			if (key.includes('Nature')) {
 				const extractNature = key.split(' ')[0];
 				pokemon.Nature = extractNature;
 			}
-
+			// Assign the value to the appropriate key in the Pokemon object.
 			switch (key) {
 				case 'Ability':
 					pokemon.Ability = trimmedValue;
