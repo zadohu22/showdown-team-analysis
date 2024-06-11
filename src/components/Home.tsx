@@ -1,10 +1,11 @@
-import { convertToJson } from '../helpers/convertToJson';
-import { DisplayMons } from './DisplayMons';
-import { convertFullTeam } from '../helpers/convertFullTeam';
-import fullTeam from '../text/sample-from-showdown.txt';
+import { convertToJson } from "../helpers/convertToJson";
+import { DisplayMons } from "./DisplayMons";
+import { convertFullTeam } from "../helpers/convertFullTeam";
+import fullTeam from "../text/sample-from-showdown.txt";
+// const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 const Home = () => {
-	const vileplume = `\
+  const vileplume = `\
 	Vileplume @ Life Orb  
 	Ability: Effect Spore  
 	Level: 50  
@@ -18,7 +19,7 @@ const Home = () => {
 	- Sludge Bomb  
 	- Tera Blast`;
 
-	const gyarados = `Gyarados @ Clear Amulet  
+  const gyarados = `Gyarados @ Clear Amulet  
 	Ability: Intimidate  
 	Level: 50  
 	Tera Type: Steel  
@@ -29,7 +30,7 @@ const Home = () => {
 	- Iron Head  
 	- Roar  `;
 
-	const porygon = `Porygon2 @ Eviolite  
+  const porygon = `Porygon2 @ Eviolite  
 	Ability: Download  
 	Level: 50  
 	Tera Type: Ghost  
@@ -41,7 +42,7 @@ const Home = () => {
 	- Ice Beam  
 	- Tri Attack  `;
 
-	const tinkaton = `Tinkaton @ Assault Vest  
+  const tinkaton = `Tinkaton @ Assault Vest  
 	Ability: Own Tempo  
 	Level: 50  
 	Tera Type: Fighting  
@@ -52,7 +53,7 @@ const Home = () => {
 	- Play Rough  
 	- Tera Blast  `;
 
-	const umbreon = `Umbreon @ Leftovers  
+  const umbreon = `Umbreon @ Leftovers  
 	Ability: Inner Focus  
 	Level: 50  
 	Tera Type: Poison  
@@ -64,7 +65,7 @@ const Home = () => {
 	- Taunt  
 	- Moonlight `;
 
-	const fullTeamText = `Vileplume @ Life Orb  
+  const fullTeamText = `Vileplume @ Life Orb  
 	Ability: Effect Spore  
 	Level: 50  
 	Shiny: Yes  
@@ -135,33 +136,33 @@ const Home = () => {
 	- Tera Blast 
 	`;
 
-	convertFullTeam(fullTeamText);
+  convertFullTeam(fullTeamText);
 
-	// const jsonData = convertToJson(text2);
-	// console.log(jsonData);
-	return (
-		<div className='w-full h-full flex flex-col text-black justify-center items-center'>
-			<div>
-				<DisplayMons pokemon={vileplume} />
-			</div>
-			-----------------------------------------
-			<div>
-				<DisplayMons pokemon={gyarados} />
-			</div>
-			-----------------------------------------
-			<div>
-				<DisplayMons pokemon={umbreon} />
-			</div>
-			-----------------------------------------
-			<div>
-				<DisplayMons pokemon={porygon} />
-			</div>
-			-----------------------------------------
-			<div>
-				<DisplayMons pokemon={tinkaton} />
-			</div>
-		</div>
-	);
+  // const jsonData = convertToJson(text2);
+  // console.log(jsonData);
+  return (
+    <div className='w-full h-full flex flex-col text-black justify-center items-center'>
+      <div>
+        <DisplayMons pokemon={vileplume} />
+      </div>
+      -----------------------------------------
+      <div>
+        <DisplayMons pokemon={gyarados} />
+      </div>
+      -----------------------------------------
+      <div>
+        <DisplayMons pokemon={umbreon} />
+      </div>
+      -----------------------------------------
+      <div>
+        <DisplayMons pokemon={porygon} />
+      </div>
+      -----------------------------------------
+      <div>
+        <DisplayMons pokemon={tinkaton} />
+      </div>
+    </div>
+  );
 };
 
 export default Home;

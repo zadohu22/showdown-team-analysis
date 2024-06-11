@@ -1,8 +1,11 @@
+import { convertToJson } from "./convertToJson";
+
 export const convertFullTeam = (fullTeam: string) => {
-	const lines = fullTeam.split(/\n\s*\n/);
+  const lines = fullTeam.split(/\n\s*\n/);
 
-	console.log(lines);
-	return lines;
+  const team = lines.map((pokemon) => convertToJson(pokemon));
 
-	// return console.log(fullTeam);
+  console.log(team, "this is convert full team");
+
+  return team;
 };
