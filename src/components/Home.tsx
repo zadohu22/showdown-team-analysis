@@ -1,10 +1,21 @@
 import { convertToJson } from "../helpers/convertToJson";
 import { DisplayMons } from "./DisplayMons";
 import { convertFullTeam } from "../helpers/convertFullTeam";
+// can't figure out how to import a txt properly atm. hard coding individual pokemon for now
 import fullTeam from "../text/sample-from-showdown.txt";
-// const { GoogleGenerativeAI } = require("@google/generative-ai");
+import weaknessChart from "../helpers/weaknessChart";
+import { useState } from "react";
+
+interface PokemonTypeInfo {
+  type: {
+    name: string;
+  };
+}
 
 const Home = () => {
+  const [firstTypeMultiplier, setFirstTypeMultiplier] = useState([]);
+  const [secondTypeMultiplier, setSecondTypeMultiplier] = useState([]);
+
   const vileplume = `\
 	Vileplume @ Life Orb  
 	Ability: Effect Spore  
@@ -136,10 +147,72 @@ const Home = () => {
 	- Tera Blast 
 	`;
 
-  convertFullTeam(fullTeamText);
+  // --------------------------------------------------------------------
 
-  // const jsonData = convertToJson(text2);
-  // console.log(jsonData);
+  const fullTeam = convertFullTeam(fullTeamText);
+  const fullTeamNames = fullTeam.map((pokemon) =>
+    // have to clean the input here, some pokemon will fail the fetch because of how they're named on showdown
+    // will have to revisit this and add more checks eventually
+    // this works for my hard coded pokemon (maushold-four should just be maushold)
+    pokemon.Name.split("-")[0].toLowerCase()
+  );
+
+  console.log(fullTeamNames, "full team names");
+
+  // Pokemon type isn't included in the user input, must make a request for each pokemon to get their typing
+  const getPokemonType = async (pkmn: string) => {
+    const data = await fetch(`https://pokeapi.co/api/v2/pokemon/${pkmn}`);
+    const result = await data.json();
+    const pkmnType = result.types.map(
+      (typeInfo: PokemonTypeInfo) => typeInfo.type.name
+    );
+    return pkmnType;
+  };
+
+  // call getPokemonType on each pokemon, returns an array with each pokemons type (if two types then an array of arrays)
+  const getAllTypes = async (names: string[]) => {
+    try {
+      const allTypes = await Promise.all(
+        names.map((name: string) => getPokemonType(name))
+      );
+      console.log(allTypes, "all types");
+
+      return allTypes;
+    } catch (error) {
+      console.error("Error fetching Pokémon types:", error);
+    }
+  };
+
+  getAllTypes(fullTeamNames);
+
+  // compare the getAllTypes array to the weakness chart, to get a full team breakdown of weaknesses that aren't covered
+  // implement next
+
+  //   const checkWeaknessForOnePokmn = (pokemon: string[]) {
+  // 	for (const pokemonType in weaknessChart) {
+  // 		if (
+  // 		  pokemon.types[0].type.name ===
+  // 		  pokemonType.charAt(0).toLowerCase() + pokemonType.slice(1)
+  // 		) {
+  // 		  console.log(weaknessChart[pokemonType]);
+  // 		  setTypeOneMultiplier(Object.entries(weaknessChart[pokemonType]));
+  // 		}
+  // 		if (pokemon.types.length > 1) {
+  // 		  if (
+  // 			pokemon.types[1].type.name ===
+  // 			pokemonType.charAt(0).toLowerCase() + pokemonType.slice(1)
+  // 		  ) {
+  // 			setTypeTwoMultiplier(Object.entries(weaknessChart[pokemonType]));
+  // 		  }
+  // 		}
+  // 	  }
+  // 	}, [pokemon]);
+  // 	console.log("typeOneMult", typeOneMultiplier);
+  // 	console.log("typeTwoMult", typeTwoMultiplier);
+  //   }
+
+  // --------------------------------------------------------------------
+
   return (
     <div className='w-full h-full flex flex-col text-black justify-center items-center'>
       <div>
